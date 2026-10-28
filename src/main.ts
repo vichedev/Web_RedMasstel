@@ -21,6 +21,9 @@ async function bootstrap() {
         helmet({
             crossOriginResourcePolicy: { policy: 'cross-origin' },
             contentSecurityPolicy: false,
+            // helmet usa "no-referrer" por defecto y OpenStreetMap bloquea
+            // los mosaicos del mapa que llegan sin Referer (403).
+            referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
         }),
     );
 

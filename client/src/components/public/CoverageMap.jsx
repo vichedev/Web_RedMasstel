@@ -155,6 +155,8 @@ export function CoverageMap({ brand }) {
                   attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
                   url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
                   maxZoom={19}
+                  // OSM exige saber desde qué sitio se piden los mosaicos.
+                  referrerPolicy="strict-origin-when-cross-origin"
                   className="cm-dark-tiles"
                 />
                 <MapAutoFit points={points} />
