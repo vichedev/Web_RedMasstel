@@ -1,0 +1,39 @@
+# Build artefactos (los regenera el Dockerfile)
+node_modules
+dist
+coverage
+.tsbuildinfo
+
+# Datos locales — los uploads viven en un volume del compose
+uploads/*
+!uploads/.gitkeep
+
+# Secretos
+.env
+.env.*
+!.env.example
+.env.deploy
+
+# Generados
+docker/nginx.conf
+
+# Editor / VCS
+.git
+.gitignore
+.idea
+.vscode
+*.log
+*.sublime-workspace
+
+# Código fuente del front: la imagen solo usa el build ya generado en public/
+client
+vite.config.mjs
+
+# Tests/docs no necesarios en runtime
+test
+README.md
+
+# Instalador
+backups
+.deployed-version
+redmaastel.sh

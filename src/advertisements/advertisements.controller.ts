@@ -1,0 +1,75 @@
+import {
+    Body,
+    Controller,
+    Delete,
+    Get,
+    Param,
+    ParseUUIDPipe,
+    Patch,
+    Post,
+    Query,
+} from '@nestjs/common';
+import { AdvertisementsService } from './advertisements.service';
+import { CreateAdvertisementDto } from './dto/create-advertisement.dto';
+import { UpdateAdvertisementDto } from './dto/update-advertisement.dto';
+import { ReorderDto } from '../common/dto/reorder.dto';
+import { AdPosition } from './entities/advertisement.entity';
+import { ProductBrand } from '../products/entities/product.entity';
+import { Public } from '../auth/decorators/public.decorator';
+import { Roles } from '../auth/decorators/roles.decorator';
+import { UserRole } from '../users/entities/user.entity';
+
+@Controller('advertisements')
+export class AdvertisementsController {
+    constructor(private readonly adsService: AdvertisementsService) { }
+
+    // Público: la web pública consulta por posición + microsite
+    @Public()
+    @Get('active')
+    findActive(
+        @Query('position') position?: AdPosition,
+        @Query('brand') brand?: ProductBrand,
+    ) {
+        return this.adsService.findActiveByPosition(position, brand);
+    }
+
+    // Admin: todos (filtrable por brand para vista por microsite)
+    @Get()
+    @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
+    findAllAdmin(@Query('brand') brand?: ProductBrand) {
+        return this.adsService.findAllAdmin(brand);
+    }
+
+    @Patch('reorder')
+    @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
+    reorder(@Body() dto: ReorderDto) {
+        return this.adsService.reorder(dto);
+    }
+
+    @Get(':id')
+    @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
+    findOne(@Param('id', ParseUUIDPipe) id: string) {
+        return this.adsService.findOne(id);
+    }
+
+    @Post()
+    @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
+    create(@Body() dto: CreateAdvertisementDto) {
+        return this.adsService.create(dto);
+    }
+
+    @Patch(':id')
+    @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
+    update(
+        @Param('id', ParseUUIDPipe) id: string,
+        @Body() dto: UpdateAdvertisementDto,
+    ) {
+        return this.adsService.update(id, dto);
+    }
+
+    @Delete(':id')
+    @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
+    remove(@Param('id', ParseUUIDPipe) id: string) {
+        return this.adsService.remove(id);
+    }
+}

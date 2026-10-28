@@ -1,0 +1,5 @@
+# Los scripts deben tener finales de línea Unix (LF) o fallan en Linux
+*.sh text eol=lf
+*.sql text eol=lf
+Dockerfile text eol=lf
+*.yml text eol=lf

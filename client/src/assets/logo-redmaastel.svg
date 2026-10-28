@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 460 120" width="460" height="120">
+  <!-- Icon: fibra + ondas Wi-Fi -->
+  <g transform="translate(6 14)">
+    <!-- Hebras de fibra (grafito + naranja) -->
+    <g fill="none" stroke-linecap="round" stroke-width="6">
+      <path d="M4 86 C24 78 36 60 44 40" stroke="#444d59"/>
+      <path d="M14 90 C34 82 46 64 54 42" stroke="#687585"/>
+      <path d="M24 92 C44 84 56 66 64 44" stroke="#ed7d2b"/>
+    </g>
+    <!-- Ondas Wi-Fi (naranja) -->
+    <g fill="none" stroke="#ed7d2b" stroke-linecap="round">
+      <path d="M30 40 Q50 12 70 40" stroke-width="6" opacity=".4"/>
+      <path d="M38 46 Q50 30 62 46" stroke-width="6" opacity=".75"/>
+    </g>
+    <circle cx="50" cy="52" r="6" fill="#ed7d2b"/>
+  </g>
+
+  <!-- Wordmark -->
+  <g transform="translate(96 0)" font-family="Inter, system-ui, sans-serif">
+    <text x="0" y="62" font-size="46" font-weight="900" letter-spacing="-1.5">
+      <tspan fill="#ed7d2b">Red</tspan><tspan fill="#444d59"> MaasTel</tspan>
+    </text>
+    <text x="2" y="90" font-size="15" font-weight="600" fill="#687585" letter-spacing="0.5">
+      Tu red de confianza
+    </text>
+  </g>
+</svg>

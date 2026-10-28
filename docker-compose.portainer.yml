@@ -1,0 +1,83 @@
+# ───────────────────────────────────────────────────────────────────
+#  Red MaasTel — Stack para Portainer
+# ───────────────────────────────────────────────────────────────────
+#  Web + API en:  http://IP_DEL_SERVIDOR:${APP_PORT:-8985}
+#  Sin nginx propio y sin exponer PostgreSQL → no choca con otros stacks.
+#
+#  Variables: se definen en Portainer → "Environment variables".
+#  Lista completa en el README (sección Portainer).
+# ───────────────────────────────────────────────────────────────────
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DB_USERNAME:-redmaastel}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?Define DB_PASSWORD}
+      POSTGRES_DB: ${DB_DATABASE:-redmaastelweb}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+    networks: [internal]
+
+  backend:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    image: red-maastel-api:latest
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "${APP_PORT:-8985}:3000"
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      API_PREFIX: api/v1
+
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USERNAME: ${DB_USERNAME:-redmaastel}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_DATABASE: ${DB_DATABASE:-redmaastelweb}
+      DB_SYNCHRONIZE: "false"
+      DB_LOGGING: "false"
+
+      JWT_SECRET: ${JWT_SECRET:?Define JWT_SECRET (minimo 48 caracteres)}
+      JWT_EXPIRES_IN: 1d
+
+      COOKIE_NAME: ws_session
+      # false = entras por http://IP:8985 | true = hay HTTPS delante (proxy)
+      COOKIE_SECURE: ${COOKIE_SECURE:-false}
+      COOKIE_SAMESITE: lax
+      COOKIE_DOMAIN: ${COOKIE_DOMAIN:-}
+
+      # URL(s) con las que se abre la web, separadas por coma
+      CORS_ORIGIN: ${CORS_ORIGIN:?Define CORS_ORIGIN, ej. http://IP:8985}
+
+      BCRYPT_SALT_ROUNDS: "12"
+      THROTTLE_TTL_MS: "60000"
+      THROTTLE_LIMIT: "120"
+
+      SEED_ADMIN_EMAIL: ${SEED_ADMIN_EMAIL:?Define SEED_ADMIN_EMAIL}
+      SEED_ADMIN_PASSWORD: ${SEED_ADMIN_PASSWORD:?Define SEED_ADMIN_PASSWORD}
+      SEED_ADMIN_NAME: ${SEED_ADMIN_NAME:-Super Admin}
+
+      UPLOAD_DEST: /app/uploads
+      UPLOAD_MAX_SIZE: "26214400"
+    volumes:
+      - uploads:/app/uploads
+    networks: [internal]
+
+volumes:
+  postgres_data:
+  uploads:
+
+networks:
+  internal:
+    driver: bridge
