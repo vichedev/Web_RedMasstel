@@ -38,15 +38,15 @@ import { buildImageUrl } from "../../utils/imageUrl";
 const BRAND_CONFIG = {
   REDMAASTEL: {
     label: "Red MaasTel",
-    title: "Planes de internet y TV",
+    title: "Planes de internet",
     description:
-      "Gestiona los planes de fibra óptica y los paquetes de televisión de Red MaasTel.",
+      "Gestiona los planes de internet de fibra óptica de Red MaasTel.",
     icon: Wifi,
     accent: "from-maastel-600 to-maastel-700",
     defaultPlanType: "INTERNET",
     emptyTitle: "Aún no hay planes",
     emptyDescription:
-      "Crea tu primer plan de internet o paquete de TV, o impórtalos desde Excel.",
+      "Crea tu primer plan de internet o impórtalos desde Excel.",
     primaryLabel: "Nuevo plan",
   },
   // Vista combinada (sin filtro) — equivalente con marca única.
@@ -54,7 +54,7 @@ const BRAND_CONFIG = {
     label: "Todos los planes",
     title: "Catálogo de planes",
     description:
-      "Todos los planes de internet y televisión de Red MaasTel.",
+      "Todos los planes de internet de Red MaasTel.",
     icon: Package,
     accent: "from-maastel-700 to-graphite-800",
     defaultPlanType: "INTERNET",

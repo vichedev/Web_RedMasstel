@@ -46,10 +46,10 @@ const productSchema = z.object({
   badge: z.string().max(60).optional(),
 });
 
+// Red MaasTel solo vende internet: el tipo queda fijo en INTERNET.
+// (El backend aún admite TV/COMBO por compatibilidad con datos viejos.)
 const PLAN_TYPE_OPTIONS = [
   { value: "INTERNET", label: "Internet (fibra óptica)" },
-  { value: "TV", label: "Televisión" },
-  { value: "COMBO", label: "Combo (Internet + TV)" },
 ];
 
 /**
@@ -237,23 +237,12 @@ export function ProductForm({
               <label className="mb-2 block text-xs font-bold uppercase tracking-wider text-gray-700">
                 Tipo de plan *
               </label>
-              <select
-                name="planType"
-                value={form.planType}
-                onChange={handleChange}
-                disabled={submitting}
-                className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm focus:border-maastel-500 focus:outline-none focus:ring-2 focus:ring-maastel-100 disabled:opacity-60"
-              >
-                {PLAN_TYPE_OPTIONS.map((b) => (
-                  <option key={b.value} value={b.value}>
-                    {b.label}
-                  </option>
-                ))}
-              </select>
+              <div className="flex items-center gap-2 rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm font-semibold text-gray-700">
+                <Wifi size={15} className="text-maastel-600" />
+                {PLAN_TYPE_OPTIONS[0].label}
+              </div>
               <p className="mt-1 text-xs text-gray-500">
-                {isInternet
-                  ? "Plan de internet — completa las velocidades a la derecha."
-                  : "Plan de televisión — completa los canales a la derecha."}
+                Completa las velocidades a la derecha.
               </p>
             </div>
 

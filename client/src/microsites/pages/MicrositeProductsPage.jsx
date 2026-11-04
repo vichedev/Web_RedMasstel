@@ -5,7 +5,7 @@ import { CoverageMap } from "../../components/public/CoverageMap";
 import { MicrositePageHeader } from "../components/MicrositePageHeader";
 
 /**
- * Página de planes de Red MaasTel: lista de planes (internet y TV) +
+ * Página de planes de Red MaasTel: lista de planes de internet +
  * mapa de cobertura. El filtrado por `planType` lo gestiona el catálogo.
  */
 export function MicrositeProductsPage() {

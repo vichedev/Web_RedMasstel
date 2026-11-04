@@ -181,7 +181,7 @@ export function Footer() {
                 <span className="text-maastel-400">nuestras promociones</span>
               </h3>
               <p className="mt-1 text-sm text-maastel-200">
-                Recibe ofertas en planes de internet, TV y nuevas coberturas.
+                Recibe ofertas en planes de internet y nuevas coberturas.
               </p>
             </div>
 

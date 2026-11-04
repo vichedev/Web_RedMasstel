@@ -22,13 +22,13 @@ export const MICROSITE_NAV = {
 export const MICROSITE_CONTENT = {
     REDMAASTEL: {
         icon: Wifi,
-        chip: "Internet de fibra óptica y TV",
+        chip: "Internet de fibra óptica",
         hero: {
             title: "Conéctate con la red",
             highlight: "de confianza",
             tail: "",
             subtitle:
-                "Internet de fibra óptica de alta velocidad y televisión por suscripción para tu hogar y tu negocio. Red MaasTel: estabilidad, soporte 24/7 y la mejor cobertura.",
+                "Internet de fibra óptica de alta velocidad para tu hogar y tu negocio. Red MaasTel: estabilidad, soporte 24/7 y la mejor cobertura.",
             ctaPrimary: { label: "Ver planes", to: "/planes" },
             ctaSecondary: { label: "Hablar con un asesor", to: "/contacto" },
             // Stats que aparecen como cards al pie del hero. `value` es el
@@ -44,7 +44,7 @@ export const MICROSITE_CONTENT = {
             chip: "Nuestra misión",
             title: "Tu red de confianza, sin límites",
             paragraphs: [
-                "En Red MaasTel proporcionamos internet de fibra óptica con máxima estabilidad y velocidad simétrica, y televisión por suscripción de alta calidad, pensados para familias y empresas que necesitan una conexión real.",
+                "En Red MaasTel proporcionamos internet de fibra óptica con máxima estabilidad y velocidad simétrica, pensado para familias y empresas que necesitan una conexión real.",
                 "Cubrimos zonas rurales y urbanas con la misma calidad, expandiendo nuestra red continuamente con la mejor tecnología y una atención personalizada.",
             ],
         },
@@ -52,7 +52,7 @@ export const MICROSITE_CONTENT = {
             chip: "Planes Red MaasTel",
             title: "Elige el plan que se adapta a ti",
             subtitle:
-                "Desde Wi-Fi 6 para el hogar hasta fibra dedicada para tu empresa, más paquetes de TV para toda la familia.",
+                "Desde Wi-Fi 6 para el hogar hasta fibra dedicada para tu empresa.",
         },
         documents: {
             chip: "Documentos Red MaasTel",
@@ -64,7 +64,7 @@ export const MICROSITE_CONTENT = {
             chip: "Conversemos",
             title: "Te asesoramos sobre el plan ideal",
             subtitle:
-                "Cuéntanos qué necesitas: velocidad para tu hogar, fibra para tu negocio o un paquete de TV. Te recomendamos la mejor opción.",
+                "Cuéntanos qué necesitas: velocidad para tu hogar o fibra para tu negocio. Te recomendamos la mejor opción.",
         },
     },
 };

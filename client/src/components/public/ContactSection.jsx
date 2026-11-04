@@ -10,7 +10,6 @@ import {
   AlertCircle,
   Wifi,
   Router,
-  Tv,
   HelpCircle,
   Sparkles,
   ArrowRight,
@@ -65,17 +64,6 @@ const TOPICS = [
     text: "text-maastel-700",
   },
   {
-    value: "Televisión por suscripción",
-    label: "Televisión",
-    sub: "TV HD",
-    brand: "REDMAASTEL",
-    icon: Tv,
-    accent: "from-maastel-600 to-maastel-500",
-    ring: "ring-maastel-500",
-    bg: "bg-gradient-to-r from-maastel-50 to-maastel-50",
-    text: "text-maastel-700",
-  },
-  {
     value: "Soporte técnico",
     label: "Soporte técnico",
     sub: "Asistencia",
@@ -92,7 +80,7 @@ const TOPICS = [
 const BRAND_META = {
   REDMAASTEL: {
     name: "Red MaasTel",
-    label: "Internet y TV",
+    label: "Internet de fibra óptica",
     icon: Wifi,
     accent: "from-maastel-500 to-maastel-700",
   },
