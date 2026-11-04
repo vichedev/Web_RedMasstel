@@ -233,23 +233,24 @@ export function MicrositeHero() {
                             className={`absolute inset-16 rounded-full blur-2xl ${theme.glowMd}`}
                         />
 
-                        {/* Card del logo (centrado) */}
-                        <div className="absolute inset-20 flex items-center justify-center overflow-hidden rounded-3xl bg-white/5 p-10 backdrop-blur ring-1 ring-white/15 shadow-[0_20px_80px_-20px_rgba(0,0,0,0.6)]">
+                        {/* Card del logo (centrado): fondo blanco para que el
+                            logo (texto oscuro + naranja) se lea bien. */}
+                        <div className="absolute inset-x-6 top-1/2 flex h-48 -translate-y-1/2 items-center justify-center overflow-hidden rounded-3xl bg-white px-8 py-6 ring-4 ring-white/25 shadow-[0_25px_80px_-15px_rgba(0,0,0,0.65),0_0_60px_-10px_rgba(237,125,43,0.55)]">
                             <span
                                 aria-hidden
-                                className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent"
+                                className="pointer-events-none absolute inset-0 bg-gradient-to-br from-maastel-50/60 via-transparent to-transparent"
                             />
                             {logoUrl ? (
                                 <img
                                     src={logoUrl}
                                     alt={logoAlt}
-                                    className="relative h-full w-full object-contain drop-shadow-2xl"
+                                    className="relative h-full w-full object-contain"
                                 />
                             ) : (
                                 <Icon
                                     size={140}
                                     strokeWidth={1.4}
-                                    className="relative text-white/80"
+                                    className="relative text-maastel-600"
                                 />
                             )}
                         </div>
