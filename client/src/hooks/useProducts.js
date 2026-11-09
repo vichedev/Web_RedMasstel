@@ -30,6 +30,26 @@ function invalidate(qc) {
   qc.invalidateQueries({ queryKey: queryKeys.products.all });
 }
 
+/**
+ * Guarda el orden de los planes. Recibe la lista ya ordenada; la posición
+ * de cada plan es su índice (0 = primero en la web).
+ */
+export function useReorderProducts() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (orderedProducts) =>
+      productService.reorder(
+        orderedProducts.map((p, i) => ({ id: p.id, displayOrder: i })),
+      ),
+    onSuccess: () => {
+      invalidate(qc);
+      toast.success("Orden de los planes guardado");
+    },
+    onError: (err) =>
+      toast.error(getErrorMessage(err, "No se pudo guardar el orden")),
+  });
+}
+
 export function useCreateProduct() {
   const qc = useQueryClient();
   return useMutation({

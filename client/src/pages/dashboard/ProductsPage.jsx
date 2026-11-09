@@ -11,6 +11,9 @@ import {
   CircleSlash,
   StarOff,
   Wifi,
+  ArrowUp,
+  ArrowDown,
+  ArrowUpDown,
 } from "lucide-react";
 import { PageHeader } from "../../components/dashboard/PageHeader";
 import { DataTable } from "../../components/dashboard/DataTable";
@@ -20,6 +23,7 @@ import { EmptyState } from "../../components/dashboard/EmptyState";
 import { SkeletonTable } from "../../components/dashboard/Skeleton";
 import { BulkActionsBar } from "../../components/dashboard/BulkActionsBar";
 import { ProductForm } from "../../components/dashboard/products/ProductForm";
+import { ReorderPlans } from "../../components/dashboard/products/ReorderPlans";
 import {
   useProductsAdmin,
   useCreateProduct,
@@ -27,6 +31,7 @@ import {
   useDeleteProduct,
   useBulkUpdateProducts,
   useBulkDeleteProducts,
+  useReorderProducts,
 } from "../../hooks/useProducts";
 import { useSelection } from "../../hooks/useSelection";
 import { buildImageUrl } from "../../utils/imageUrl";
@@ -81,6 +86,7 @@ export function ProductsPage({ brand }) {
   const [editing, setEditing] = useState(null);
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [bulkConfirmOpen, setBulkConfirmOpen] = useState(false);
+  const [reorderOpen, setReorderOpen] = useState(false);
 
   const { data: products = [], isLoading } = useProductsAdmin(
     isFiltered ? { brand } : {},
@@ -90,6 +96,25 @@ export function ProductsPage({ brand }) {
   const deleteMut = useDeleteProduct();
   const bulkUpdateMut = useBulkUpdateProducts();
   const bulkDeleteMut = useBulkDeleteProducts();
+  const reorderMut = useReorderProducts();
+
+  // Sube/baja un plan una posición y guarda al instante.
+  const movePlan = (index, delta) => {
+    const target = index + delta;
+    if (target < 0 || target >= products.length || reorderMut.isPending) return;
+    const next = [...products];
+    [next[index], next[target]] = [next[target], next[index]];
+    reorderMut.mutate(next);
+  };
+
+  const handleSaveOrder = async (ordered) => {
+    try {
+      await reorderMut.mutateAsync(ordered);
+      setReorderOpen(false);
+    } catch {
+      // toast ya manejado en el hook
+    }
+  };
 
   const submitting = createMut.isPending || updateMut.isPending;
   const deleting = deleteMut.isPending;
@@ -199,6 +224,47 @@ export function ProductsPage({ brand }) {
           aria-label={`Seleccionar ${p.name}`}
         />
       ),
+    },
+    {
+      key: "position",
+      label: "Posición",
+      className: "w-28",
+      render: (p) => {
+        const index = products.findIndex((x) => x.id === p.id);
+        return (
+          <div className="flex items-center gap-1">
+            <span className="w-8 text-sm font-black tabular-nums text-maastel-600">
+              #{index + 1}
+            </span>
+            <div className="flex flex-col">
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  movePlan(index, -1);
+                }}
+                disabled={index === 0 || reorderMut.isPending}
+                title="Subir una posición"
+                className="rounded p-0.5 text-gray-400 transition hover:bg-gray-100 hover:text-gray-800 disabled:opacity-25"
+              >
+                <ArrowUp size={14} />
+              </button>
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  movePlan(index, 1);
+                }}
+                disabled={index === products.length - 1 || reorderMut.isPending}
+                title="Bajar una posición"
+                className="rounded p-0.5 text-gray-400 transition hover:bg-gray-100 hover:text-gray-800 disabled:opacity-25"
+              >
+                <ArrowDown size={14} />
+              </button>
+            </div>
+          </div>
+        );
+      },
     },
     {
       key: "image",
@@ -316,13 +382,24 @@ export function ProductsPage({ brand }) {
         }
         description={cfg.description}
         action={
-          <button
-            onClick={handleCreate}
-            className={`inline-flex items-center gap-2 rounded-xl bg-gradient-to-r ${cfg.accent} px-4 py-2.5 text-sm font-black uppercase tracking-wider text-white shadow-lg transition hover:shadow-xl`}
-          >
-            <Plus size={16} />
-            {cfg.primaryLabel}
-          </button>
+          <div className="flex flex-wrap gap-2">
+            {products.length > 1 && (
+              <button
+                onClick={() => setReorderOpen(true)}
+                className="inline-flex items-center gap-2 rounded-xl bg-white px-4 py-2.5 text-sm font-black uppercase tracking-wider text-graphite-800 shadow-sm ring-1 ring-gray-200 transition hover:bg-gray-50"
+              >
+                <ArrowUpDown size={16} />
+                Ordenar planes
+              </button>
+            )}
+            <button
+              onClick={handleCreate}
+              className={`inline-flex items-center gap-2 rounded-xl bg-gradient-to-r ${cfg.accent} px-4 py-2.5 text-sm font-black uppercase tracking-wider text-white shadow-lg transition hover:shadow-xl`}
+            >
+              <Plus size={16} />
+              {cfg.primaryLabel}
+            </button>
+          </div>
         }
       />
 
@@ -391,6 +468,22 @@ export function ProductsPage({ brand }) {
           onCancel={() => setModalOpen(false)}
           submitting={submitting}
         />
+      </Modal>
+
+      <Modal
+        isOpen={reorderOpen}
+        onClose={() => setReorderOpen(false)}
+        title="Ordenar planes en la web"
+        size="lg"
+      >
+        {reorderOpen && (
+          <ReorderPlans
+            products={products}
+            onSave={handleSaveOrder}
+            onCancel={() => setReorderOpen(false)}
+            saving={reorderMut.isPending}
+          />
+        )}
       </Modal>
 
       <ConfirmDialog

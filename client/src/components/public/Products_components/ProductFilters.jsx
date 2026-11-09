@@ -9,6 +9,7 @@ import {
 import { useDebounce } from "react-use";
 
 const SORT_OPTIONS = [
+  { value: "displayOrder-ASC", label: "Recomendados" },
   { value: "createdAt-DESC", label: "Más recientes" },
   { value: "createdAt-ASC", label: "Más antiguos" },
   { value: "name-ASC", label: "Nombre A-Z" },

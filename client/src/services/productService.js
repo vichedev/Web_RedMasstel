@@ -41,6 +41,12 @@ export const productService = {
     return data;
   },
 
+  /** items: [{ id, displayOrder }] — posición de cada plan en la web. */
+  reorder: async (items) => {
+    const { data } = await api.patch("/planes/reorder", { items });
+    return data;
+  },
+
   bulkRemove: async (ids) => {
     const { data } = await api.delete("/planes/bulk", { data: { ids } });
     return data;

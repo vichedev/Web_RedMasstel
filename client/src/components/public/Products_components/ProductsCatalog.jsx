@@ -14,8 +14,9 @@ const DEFAULTS = {
   categoryId: "",
   minPrice: "",
   maxPrice: "",
-  sortBy: "createdAt",
-  sortOrder: "DESC",
+  // Orden elegido por el admin en el panel (Planes → Ordenar planes).
+  sortBy: "displayOrder",
+  sortOrder: "ASC",
   page: 1,
   limit: 8,
 };

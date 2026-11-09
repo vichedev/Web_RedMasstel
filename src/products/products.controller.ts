@@ -15,6 +15,7 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { QueryProductDto } from './dto/query-product.dto';
 import { BulkUpdateDto, BulkDeleteDto } from './dto/bulk-operations.dto';
+import { ReorderDto } from '../common/dto/reorder.dto';
 import {
     AddProductImageDto,
     ReorderProductImagesDto,
@@ -55,6 +56,13 @@ export class ProductsController {
     @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
     bulkRemove(@Body() dto: BulkDeleteDto) {
         return this.productsService.bulkRemove(dto.ids);
+    }
+
+    /** Orden manual de los planes en la web. Va antes de ':id'. */
+    @Patch('reorder')
+    @Roles(UserRole.SUPER_ADMIN, UserRole.ADMIN)
+    reorder(@Body() dto: ReorderDto) {
+        return this.productsService.reorder(dto);
     }
 
     // ─── Endpoints públicos ───

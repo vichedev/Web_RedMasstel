@@ -129,6 +129,10 @@ export class Product {
     })
     images: ProductImage[];
 
+    /** Posición manual en la web (0 = primero). La define el admin. */
+    @Column({ type: 'int', default: 0 })
+    displayOrder: number;
+
     @CreateDateColumn()
     createdAt: Date;
 

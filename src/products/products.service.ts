@@ -10,6 +10,7 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { QueryProductDto } from './dto/query-product.dto';
 import { slugify } from '../common/utils/slug.util';
+import { ReorderDto } from '../common/dto/reorder.dto';
 
 @Injectable()
 export class ProductsService {
@@ -23,11 +24,18 @@ export class ProductsService {
         const brand = dto.brand ?? ProductBrand.REDMAASTEL;
         const planType = dto.planType ?? PlanType.INTERNET;
 
+        // Los planes nuevos van al final de la lista.
+        const { max } = (await this.productRepository
+            .createQueryBuilder('p')
+            .select('COALESCE(MAX(p.displayOrder), -1)', 'max')
+            .getRawOne<{ max: number }>()) ?? { max: -1 };
+
         const product = this.productRepository.create({
             ...dto,
             brand,
             planType,
             slug,
+            displayOrder: Number(max) + 1,
             ...this.cleanFieldsForPlanType(planType),
         });
 
@@ -51,8 +59,8 @@ export class ProductsService {
             maxPrice,
             brand,
             planType,
-            sortBy = 'createdAt',
-            sortOrder = 'DESC',
+            sortBy = 'displayOrder',
+            sortOrder = 'ASC',
             page = 1,
             limit = 12,
         } = query;
@@ -90,9 +98,13 @@ export class ProductsService {
         }
 
         // Whitelist de campos por los que podemos ordenar (seguridad)
-        const sortableFields = ['createdAt', 'name', 'price'];
-        const orderField = sortableFields.includes(sortBy) ? sortBy : 'createdAt';
-        qb.orderBy(`product.${orderField}`, sortOrder as 'ASC' | 'DESC');
+        const sortableFields = ['displayOrder', 'createdAt', 'name', 'price'];
+        const orderField = sortableFields.includes(sortBy) ? sortBy : 'displayOrder';
+        const direction = sortOrder === 'DESC' ? 'DESC' : 'ASC';
+        qb.orderBy(`product.${orderField}`, direction);
+        // Desempate estable para que la paginación no repita planes.
+        if (orderField !== 'createdAt') qb.addOrderBy('product.createdAt', 'DESC');
+        qb.addOrderBy('product.id', 'ASC');
 
         qb.skip((page - 1) * limit).take(limit);
 
@@ -118,8 +130,26 @@ export class ProductsService {
         return this.productRepository.find({
             where,
             relations: ['category'],
-            order: { createdAt: 'DESC' },
+            order: { displayOrder: 'ASC', createdAt: 'DESC' },
         });
+    }
+
+    /** Guarda el orden elegido en el panel (posición de cada plan). */
+    async reorder(dto: ReorderDto): Promise<{ affected: number }> {
+        const ids = dto.items.map((i) => i.id);
+        if (new Set(ids).size !== ids.length) {
+            throw new ConflictException('Hay planes repetidos en el orden');
+        }
+        const found = await this.productRepository.count({ where: { id: In(ids) } });
+        if (found !== ids.length) {
+            throw new NotFoundException('Uno o más planes del orden no existen');
+        }
+        await this.productRepository.manager.transaction(async (manager) => {
+            for (const item of dto.items) {
+                await manager.update(Product, item.id, { displayOrder: item.displayOrder });
+            }
+        });
+        return { affected: ids.length };
     }
 
     async findOne(id: string): Promise<Product> {

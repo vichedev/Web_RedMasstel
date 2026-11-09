@@ -3,6 +3,7 @@ import { Type } from 'class-transformer';
 import { PlanType, ProductBrand } from '../entities/product.entity';
 
 export enum ProductSortBy {
+    DISPLAY_ORDER = 'displayOrder',
     CREATED_AT = 'createdAt',
     NAME = 'name',
     PRICE = 'price',
@@ -48,11 +49,11 @@ export class QueryProductDto {
 
     @IsOptional()
     @IsEnum(ProductSortBy)
-    sortBy?: ProductSortBy = ProductSortBy.CREATED_AT;
+    sortBy?: ProductSortBy = ProductSortBy.DISPLAY_ORDER;
 
     @IsOptional()
     @IsEnum(SortOrder)
-    sortOrder?: SortOrder = SortOrder.DESC;
+    sortOrder?: SortOrder = SortOrder.ASC;
 
     @IsOptional()
     @Type(() => Number)
